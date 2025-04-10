@@ -13,9 +13,26 @@ def home():
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.json
-    message = f"🚨 Sinyal Baru dari TradingView!\n\n{data.get('message', 'Tidak ada isi pesan')}"
+
+    # Ambil semua data dari payload TradingView
+    pair = data.get('pair', 'N/A')
+    signal = data.get('signal', 'N/A')
+    entry = data.get('entry', 'N/A')
+    tp = data.get('tp', 'N/A')
+    sl = data.get('sl', 'N/A')
+
+    # Buat pesan format yang rapi
+    message = f"""🚨 Sinyal Baru dari TradingView!
+
+🔁 Pair: {pair}
+📉 Sinyal: {signal}
+💰 Entry: {entry}
+🎯 TP: {tp}
+🛡️ SL: {sl}"""
+
     send_telegram(message)
     return 'Pesan dikirim ke Telegram!', 200
+
 
 def send_telegram(msg):
     url = f'https://api.telegram.org/bot8165162109:AAEMmiaZRuBeAEgx_Tj6ouDLpSCg4R-nxcg/sendMessage'
