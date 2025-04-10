@@ -41,3 +41,10 @@ def send_telegram(msg):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
+
+@app.route("/", methods=["POST"])
+def webhook():
+    data = request.json
+    print("Webhook data received:", data)  # <- ini penting
+    ...
+
