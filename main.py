@@ -1,6 +1,5 @@
 from flask import Flask, request
 import requests
-import json
 
 app = Flask(__name__)
 
@@ -14,27 +13,36 @@ def home():
 @app.route('/', methods=['POST'])
 def webhook():
     try:
-        # Coba ambil dari JSON body langsung
+        # Ambil payload sebagai JSON
         data = request.get_json(force=True)
-    except:
-        # Jika gagal (misal format bukan JSON), fallback pakai form
+    except Exception as e:
         data = request.form.to_dict()
 
-    # Ambil data payload dari Pine Script
-    pair = data.get('pair', 'N/A')
+    # Ambil data dengan kunci-kunci yang kita set di Pine Script
+    pair   = data.get('pair', 'N/A')
     signal = data.get('signal', 'N/A')
-    entry = data.get('entry', 'N/A')
-    tp = data.get('tp', 'N/A')
-    sl = data.get('sl', 'N/A')
+    entry  = data.get('entry', 'N/A')
+    sl     = data.get('sl', 'N/A')
+    tp1    = data.get('tp1', 'N/A')
+    tp2    = data.get('tp2', 'N/A')
+    tp3    = data.get('tp3', 'N/A')
+    tp4    = data.get('tp4', 'N/A')
+    tp5    = data.get('tp5', 'N/A')
+    target = data.get('target', 'N/A')
 
-    # Buat pesan Telegram
+    # Susun pesan notifikasi ke Telegram
     message = f"""🚨 Sinyal Baru dari TradingView!
 
 🔁 Pair: {pair}
-📉 Sinyal: {signal}
+📈 Signal: {signal}
 💰 Entry: {entry}
-🎯 TP: {tp}
-🛡️ SL: {sl}"""
+🛡️ SL: {sl}
+🎯 TP1: {tp1}
+🎯 TP2: {tp2}
+🎯 TP3: {tp3}
+🎯 TP4: {tp4}
+🎯 TP5: {tp5}
+🚀 To The Moon: {target}"""
 
     send_telegram(message)
     return 'Pesan dikirim ke Telegram!', 200
